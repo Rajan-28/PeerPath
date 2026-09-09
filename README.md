@@ -1,51 +1,29 @@
 # PeerPath
 
-Safe **video + text** random connections with real WebRTC, accounts, and matchmaking.
+Safe video + text random chat with accounts and real WebRTC.
 
-## IMPORTANT – How to run (required)
-
-Camera, video, and matching **only work** when you start the server:
+## Run (required)
 
 ```bash
 cd peerpath
 node server.js
 ```
 
-Then open in your browser:
+Open **http://localhost:3000** in your browser.
 
-**http://localhost:3000**
+Do not open HTML files directly.
 
-Do **not** open the HTML files directly (file://) — camera and WebSocket will fail.
+## Use
 
-## Features
-- **Sign Up / Sign In** accounts (stored in your browser)
-- Real WebRTC video + audio (STUN via Google)
-- Text chat via DataChannel
-- Random matchmaking (text or video queues)
-- Friend list, report system, content filter
-- 18+ confirmation on signup
+1. Sign Up (display name, username, password, region, 18+ checkbox)
+2. After login you see the main Connect screen
+3. Open a **second tab**, sign up as another user
+4. Both click **Text Only** or **Video + Text**
+5. Allow camera if prompted → you get matched
 
-## How to test video + chat
+## Fixes in this version
 
-1. Run `node server.js`
-2. Open http://localhost:3000 in **Tab 1**
-3. Sign up as User A
-4. Open http://localhost:3000 in **Tab 2** (or another browser)
-5. Sign up as User B
-6. Both click **Video + Text** (allow camera when asked)
-7. You will be matched — local + remote video and chat work
-
-## Troubleshooting camera
-
-- Allow camera & microphone when the browser prompts
-- Use Chrome or Edge on desktop for best results
-- If camera is used by Zoom/Teams, close those apps first
-- Must be on http://localhost:3000 (not file://)
-
-## Architecture
-
-```
-Browser A  ←── WebSocket ──→  server.js  ←── WebSocket ──→  Browser B
-     │                                                      │
-     └──────────── RTCPeerConnection (media + chat) ────────┘
-```
+- Blank screen after login (Tailwind hidden/flex conflict) — fixed
+- Signup silent validation failures — fixed with clear errors
+- Camera permission errors show clear messages
+- Server connection status shown on the home screen
