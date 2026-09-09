@@ -1,41 +1,51 @@
 # PeerPath
 
-Safe **video + text** random connections across regions and generations — with real WebRTC.
+Safe **video + text** random connections with real WebRTC, accounts, and matchmaking.
 
-## Features
-- Real WebRTC peer-to-peer video & audio
-- WebSocket signaling + matchmaking server (zero npm dependencies)
-- Text chat via RTCDataChannel (with signaling fallback)
-- Google STUN servers for NAT traversal
-- Friend requests, report system, content filter, 18+ gate
-- Professional responsive UI
+## IMPORTANT – How to run (required)
 
-## How to run
+Camera, video, and matching **only work** when you start the server:
 
 ```bash
 cd peerpath
 node server.js
 ```
 
-Then open **http://localhost:3000** in **two different browser tabs** (or two devices on the same network).
+Then open in your browser:
 
-1. Confirm age (18+)
-2. Click **Text Only** or **Video + Text**
-3. Allow camera/mic when asked
-4. When a second person also clicks Find, you get matched
-5. Chat, video, mute, report, friend, or Next
+**http://localhost:3000**
+
+Do **not** open the HTML files directly (file://) — camera and WebSocket will fail.
+
+## Features
+- **Sign Up / Sign In** accounts (stored in your browser)
+- Real WebRTC video + audio (STUN via Google)
+- Text chat via DataChannel
+- Random matchmaking (text or video queues)
+- Friend list, report system, content filter
+- 18+ confirmation on signup
+
+## How to test video + chat
+
+1. Run `node server.js`
+2. Open http://localhost:3000 in **Tab 1**
+3. Sign up as User A
+4. Open http://localhost:3000 in **Tab 2** (or another browser)
+5. Sign up as User B
+6. Both click **Video + Text** (allow camera when asked)
+7. You will be matched — local + remote video and chat work
+
+## Troubleshooting camera
+
+- Allow camera & microphone when the browser prompts
+- Use Chrome or Edge on desktop for best results
+- If camera is used by Zoom/Teams, close those apps first
+- Must be on http://localhost:3000 (not file://)
 
 ## Architecture
 
 ```
-Browser A  ←── WebSocket signaling ──→  Node server  ←── WebSocket ──→  Browser B
-     │                                        │
-     └──── RTCPeerConnection (media + data) ──┘
-              (STUN: stun.l.google.com)
+Browser A  ←── WebSocket ──→  server.js  ←── WebSocket ──→  Browser B
+     │                                                      │
+     └──────────── RTCPeerConnection (media + chat) ────────┘
 ```
-
-- **server.js** – pure Node.js HTTP static file server + minimal WebSocket matchmaking & SDP/ICE relay
-- **js/chat.js** – full WebRTC client (offer/answer, ICE, DataChannel, getUserMedia)
-
-## Production notes
-For public internet use, add a TURN server (e.g. coturn) and host the signaling server with HTTPS/WSS.
